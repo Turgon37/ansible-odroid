@@ -1,0 +1,5 @@
+---
+# defaults file for odroid
+
+# Choose the monitoring backend to configure (if available)
+#odroid__monitoring:

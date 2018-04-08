@@ -1,0 +1,24 @@
+---
+
+- name: Configure zabbix userparameters
+  include_role:
+    name: zabbix-agent
+    tasks_from: userparameter
+  vars:
+    zabbix_agent__userparameter:
+      name: odroid
+      comment: Theses items get the hardware information of the Odroid
+      userparameters:
+        - key: odroid.cpu.temperature
+          command: >
+            ( [ -f /sys/devices/platform/scpi/scpi:sensors/hwmon/hwmon0/temp1_input ] && cat /sys/devices/platform/scpi/scpi:sensors/hwmon/hwmon0/temp1_input )
+            || echo -n 'ZBX_NOTSUPPORTED'
+          comment: Get CPU core temperature. exemple "45622" for 45.6 C
+        - key: odroid.cpu.frequency
+          command: /usr/bin/env cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+          comment: Get CPU current frequency
+          sudo: True
+          sudo_user: root
+          sudo_group: root
+      state: present
+  tags: ['odroid', 'odroid-monitoring']
