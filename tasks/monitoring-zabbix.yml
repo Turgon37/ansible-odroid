@@ -11,7 +11,8 @@
       userparameters:
         - key: odroid.cpu.temperature
           command: >
-            ( [ -f /sys/devices/platform/scpi/scpi:sensors/hwmon/hwmon0/temp1_input ] && cat /sys/devices/platform/scpi/scpi:sensors/hwmon/hwmon0/temp1_input )
+            ( /usr/bin/env test -f /sys/devices/platform/scpi/scpi:sensors/hwmon/hwmon0/temp1_input && cat /sys/devices/platform/scpi/scpi:sensors/hwmon/hwmon0/temp1_input )
+            || ( /usr/bin/env test -f /sys/devices/virtual/hwmon/hwmon0/temp1_input && cat /sys/devices/virtual/hwmon/hwmon0/temp1_input )
             || echo -n 'ZBX_NOTSUPPORTED'
           comment: Get CPU core temperature. exemple "45622" for 45.6 C
         - key: odroid.cpu.frequency
