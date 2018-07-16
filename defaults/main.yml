@@ -3,3 +3,46 @@
 
 # Choose the monitoring backend to configure (if available)
 #odroid__monitoring:
+
+# Enable facts deploiement
+odroid__facts: True
+
+
+### DEVICE SECTION
+# ---------------------------------------
+
+# The target mode for this device
+# heartbeat
+#    It blinks like a „heartbeat“ when the kernel is active.
+#    The frequency of the beat depends on cpu load
+# none
+#    Deactivate the led completly.
+# sd/emmc
+#    The led shows access to the sd card respectivley 
+#                            the emmc memory
+# blink
+#    The LED starts to blink.
+#     You can control on and off times with writing the times 
+#        in milliseconds into delay_on and delay_off
+# cpu0/cpu1:
+#    This trigger should show cpu activity on the selected core
+# torch
+#    With this trigger selected, the LEDs is permanent on,
+#    but you can set the brightness with writing into 
+#    the brightness file (0 is no light, 255 is max brightness).
+odroid__blue_led_mode: heartbeat
+
+# The path to the sys class file that configure blue led mode
+odroid__blue_led_mode_sys_file: /sys/class/leds/blue:heartbeat/trigger
+
+
+### SERVICE CONFIGURATION
+# ---------------------------------------
+# Path to service environment file
+#odroid__service_environment:
+
+# The name of the system service will manage blue led status
+odroid__blue_led_service_name: odroid-blue-led
+
+# Determine if the blue led service must be enabled at boot
+odroid__blue_led_service_enabled: true

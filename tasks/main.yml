@@ -12,6 +12,21 @@
       skip: true
   tags: ['always']
 
-- include_tasks: 'monitoring-{{ odroid__monitoring }}.yml'
+- name: Check role availability
+  fail:
+    msg: This module only works with systemd
+  when: ansible_service_mgr != 'systemd'
+
+- import_tasks: configure.yml
+  tags: ['odroid', 'odroid-configure']
+
+- import_tasks: service.yml
+  tags: ['odroid', 'odroid-service']
+
+- include_tasks: 'monitoring/{{ odroid__monitoring }}.yml'
   when: odroid__monitoring is defined
   tags: ['odroid', 'odroid-monitoring']
+
+- include_tasks: facts.yml
+  when: odroid__facts|bool
+  tags: ['odroid', 'odroid-facts']

@@ -1,0 +1,29 @@
+---
+
+- name: Find out available blue led modes
+  slurp:
+    src: '{{ odroid__blue_led_mode_sys_file }}'
+  register: _odroid__blue_led_modes_raw
+
+- name: 
+  set_fact:
+    _odroid__blue_led_mode_current: "{{ _odroid__blue_led_modes_raw['content']|b64decode|regex_replace('.*\\[([a-zA-Z0-9_-]+)\\].*', '\\1')|trim }}"
+    _odroid__blue_led_modes_available: "{{ (_odroid__blue_led_modes_raw['content']|b64decode|regex_replace('[\\[\\]]', '')|trim).split(' ') }}"
+
+- name: Fail if requested blue led mode is not available
+  fail:
+    msg: Requested blue led mode is not available
+  when: odroid__blue_led_mode not in _odroid__blue_led_modes_available
+
+- name: Install service environment
+  template:
+    src:  service.environment.j2
+    dest: '{{ odroid__service_environment }}'
+  notify: ['restart-odroid-blue-led']
+
+#- name: Set blue led mode if needed
+  #copy:
+    #dest: '{{ odroid__blue_led_mode_file }}'
+    #content: '{{ odroid__blue_led_mode }}'
+    #unsafe_writes: true
+  #when: odroid__blue_led_mode is defined and odroid__blue_led_mode != _odroid__blue_led_mode_current

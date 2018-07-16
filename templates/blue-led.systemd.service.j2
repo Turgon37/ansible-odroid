@@ -1,0 +1,12 @@
+[Unit]
+Description=Odroid Blue Led configurator
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile={{ odroid__service_environment }}
+ExecStart=/usr/bin/env sh -c "echo $BLUE_LED_MODE > {{ odroid__blue_led_mode_sys_file }}"
+ExecStop=/usr/bin/env sh -c 'echo none > {{ odroid__blue_led_mode_sys_file }}'
+
+[Install]
+WantedBy=multi-user.target

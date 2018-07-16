@@ -1,0 +1,21 @@
+---
+
+- name: Install blue-led systemd service unit
+  template:
+    src: blue-led.systemd.service.j2
+    dest: '/etc/systemd/system/{{ odroid__blue_led_service_name }}.service'
+  notify: ['restart-odroid-blue-led']
+  register: _odroid__blue_led_service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+  when: _odroid__blue_led_service is changed
+
+- meta: flush_handlers
+
+- name: Ensure Odroid Blue Led is started and enabled on boot
+  service:
+    name:    '{{ odroid__blue_led_service_name }}'
+    enabled: '{{ odroid__blue_led_service_enabled|bool }}'
+    state:   "{{ odroid__blue_led_service_enabled|bool|ternary('started', 'stopped') }}"

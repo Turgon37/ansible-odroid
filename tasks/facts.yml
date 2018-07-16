@@ -1,0 +1,17 @@
+---
+
+- name: Create custom fact directory
+  file:
+    path:  "{{ facts__dir|d('/etc/ansible/facts.d') }}"
+    owner: root
+    group: root
+    mode:  0755
+    state: directory
+  tags: ['odroid', 'odroid-facts']
+
+- name: Insert custom fact file
+  copy:
+    src:  files/odroid.fact.py
+    dest: "{{ facts__dir|d('/etc/ansible/facts.d') }}/odroid.fact"
+    mode: 0755
+  tags: ['odroid', 'odroid-facts']
